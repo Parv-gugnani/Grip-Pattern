@@ -1,45 +1,63 @@
 import React, { useState, useEffect } from 'react';
 
-const GRID_ROWS = 7; 
-const GRID_COLS = 50; 
+const GRID_ROWS = 15;
+const GRID_COLS = 20;
 
 const LETTER_PATTERNS = {
-    H: [
-      [1, 0, 1],
-      [1, 0, 1],
-      [1, 1, 1],
-      [1, 0, 1],
-      [1, 0, 1],
-    ],
-    E: [
-      [1, 1, 1],
-      [1, 0, 0],
-      [1, 1, 1],
-      [1, 0, 0],
-      [1, 1, 1],
-    ],
-    L: [
-      [1, 0, 0],
-      [1, 0, 0],
-      [1, 0, 0],
-      [1, 0, 0],
-      [1, 1, 1],
-    ],
-    O: [
-      [1, 1, 1],
-      [1, 0, 1],
-      [1, 0, 1],
-      [1, 0, 1],
-      [1, 1, 1],
-    ],
+  H: [
+    [1, 0, 1],
+    [1, 0, 1],
+    [1, 1, 1],
+    [1, 0, 1],
+    [1, 0, 1],
+  ],
+  E: [
+    [1, 1, 1],
+    [1, 0, 0],
+    [1, 1, 1],
+    [1, 0, 0],
+    [1, 1, 1],
+  ],
+  L: [
+    [1, 0, 0],
+    [1, 0, 0],
+    [1, 0, 0],
+    [1, 0, 0],
+    [1, 1, 1],
+  ],
+  O: [
+    [1, 1, 1],
+    [1, 0, 1],
+    [1, 0, 1],
+    [1, 0, 1],
+    [1, 1, 1],
+  ],
+};
+
+const getRandomColor = () => {
+  const letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
 };
 
 const LEDMatrix = ({ text = "HELLO" }) => {
   const [grid, setGrid] = useState([]);
+  const [color, setColor] = useState(getRandomColor());
   const [position, setPosition] = useState(0);
 
   useEffect(() => {
     setGrid(Array(GRID_ROWS).fill().map(() => Array(GRID_COLS).fill(0)));
+  }, []);
+
+  useEffect(() => {
+    const colorInterval = setInterval(() => {
+      setColor(getRandomColor());
+    }, 3000);
+
+    return () => clearInterval(colorInterval);
   }, []);
 
   useEffect(() => {
@@ -75,7 +93,7 @@ const LEDMatrix = ({ text = "HELLO" }) => {
             style={{
               width: '20px',
               height: '20px',
-              backgroundColor: cell ? 'red' : '#111',
+              backgroundColor: cell ? color : '#111',
               borderRadius: '3px',
             }}
           ></div>
